@@ -308,26 +308,26 @@
       <label for="personSelect">投稿對象 <span class="req">*</span></label>
       <select id="personSelect" required>
         <option value="">-- 請選擇對象 --</option>
-        <option value="社長">社長</option>
-        <option value="副社長">副社長</option>
-        <option value="教學">教學</option>
-        <option value="機構組長">機構組長</option>
-        <option value="電控組長">電控組長</option>
-        <option value="程式組長">程式組長</option>
-        <option value="公關">公關</option>
-        <option value="網管">網管</option>
-        <option value="總務">總務</option>
-        <option value="美宣">美宣</option>
-        <option value="活動">活動</option>
-        <option value="器材">器材</option>
-        <option value="幹部A">幹部 A</option>
-        <option value="幹部B">幹部 B</option>
-        <option value="幹部C">幹部 C</option>
-        <option value="幹部D">幹部 D</option>
-        <option value="幹部E">幹部 E</option>
-        <option value="幹部F">幹部 F</option>
-        <option value="幹部G">幹部 G</option>
-        <option value="幹部H">幹部 H</option>
+        <option value="黃靖雯">黃靖雯</option>
+        <option value="張芮瑜">張芮瑜</option>
+        <option value="夏綺">夏綺</option>
+        <option value="呂亭儀">呂亭儀</option>
+        <option value="林琬琰">林琬琰</option>
+        <option value="字阡瑜">字阡瑜</option>
+        <option value="李姮穎">李姮穎</option>
+        <option value="蘇筠雅">蘇筠雅</option>
+        <option value="賴又瑄">賴又瑄</option>
+        <option value="曹以玹">曹以玹</option>
+        <option value="鄭宇彤">鄭宇彤</option>
+        <option value="許詠甯">許詠甯</option>
+        <option value="黃薇庭">黃薇庭</option>
+        <option value="孫子涵">孫子涵</option>
+        <option value="鄭羽岓">鄭羽岓</option>
+        <option value="李品誼">李品誼</option>
+        <option value="蘇可馨">蘇可馨</option>
+        <option value="王紫彤">王紫彤</option>
+        <option value="陳品妍">陳品妍</option>
+        <option value="陳宣璦">陳宣璦</option>
       </select>
     </div>
 
@@ -359,6 +359,9 @@
   // ⚠️ 請填入你在 Google Apps Script 取得的 Web App 部署網址
   const GAS_URL = "https://script.google.com/macros/s/AKfycbxzLGbJlFiXg1GQ7mPQc1hgbVjPdXnjIjbSZXapyXHfsB0-iVRTK2c4rV3xe5-sCbQ/exec";
 
+  // ⏰ 設定截止時間 (格式：YYYY-MM-DDTHH:mm:ss)
+  const DEADLINE = new Date("2027-3-31T23:59:59+08:00");
+  
   const form = document.getElementById('uploadForm');
   const submitBtn = document.getElementById('submitBtn');
   const progressContainer = document.getElementById('progressContainer');
@@ -366,6 +369,12 @@
   const progressFill = document.getElementById('progressFill');
   const inlineMsg = document.getElementById('inlineMsg');
 
+  // 💡 頁面載入時自動檢查是否已過截止時間
+  if (new Date() > DEADLINE) {
+    form.style.display = "none"; // 隱藏表單
+    showMsg('error', '⛔ 投稿時間已截止，不再接收新的照片。');
+  }
+  
   function showMsg(type, text) {
     inlineMsg.className = `inline-msg ${type}`;
     inlineMsg.innerText = text;
