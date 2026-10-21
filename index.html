@@ -3,75 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>照片募集系統</title>
+  <title>機器人研究社 - 幹介照片徵稿</title>
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f7; padding: 20px; }
-    .card { max-width: 550px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-    h2 { margin-top: 0; color: #333; text-align: center; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
-    select, textarea, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
-    button { width: 100%; background: #0066cc; color: #fff; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
-    button:disabled { background: #aaa; cursor: not-allowed; }
-    #statusContainer { display: none; margin-top: 20px; }
-    progress { width: 100%; height: 20px; margin-top: 8px; }
-    .status-text { font-size: 14px; color: #555; text-align: center; margin-top: 5px; }
+    /* 全域風格設定：極簡深色背景 + 經典橘色 */
+    :root {
+      --bg-color: #0d0e12;
+      --card-bg: rgba(22, 25, 33, 0.85);
+      --accent-color: #ff4d00;
+      --accent-hover: #e04400;
+      --text-main: #f0f2f5;
+      --text-muted: #8c95a6;
+      --border-color: #2a2f3d;
+      --input-bg: #12151d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景微妙的暗色幾何與星空線條 */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 50% 30%, rgba(255, 77, 0, 0.05) 0%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      z-index: -1;
+      transform: rotate(-5deg);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--accent-color);
+      border-radius: 8px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #d1d5db;
+    }
+
+    label span.req {
+      color: var(--accent-color);
+    }
+
+    select, textarea, input[type="file"] {
+      width: 100%;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus, textarea:focus, input[type="file"]:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(255, 77, 0, 0.2);
+    }
+
+    option {
+      background-color: var(--input-bg);
+      color: var(--text-main);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    /* 檔案上傳按鈕美化 */
+    input[type="file"]::file-selector-button {
+      background: #232733;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background 0.2s;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: #2e3445;
+    }
+
+    .file-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* 按鈕樣式 */
+    .submit-btn {
+      width: 100%;
+      background-color: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background-color 0.2s, transform 0.1s;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.99);
+    }
+
+    .submit-btn:disabled {
+      background-color: #3a3f4d;
+      color: #727b8e;
+      cursor: not-allowed;
+    }
+
+    /* 上傳進度條容器 */
+    #progressContainer {
+      display: none;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .status-msg {
+      font-size: 14px;
+      color: var(--text-main);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background-color: var(--input-bg);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent-color);
+      transition: width 0.2s ease;
+    }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h2>照片投稿表單</h2>
-  <form id="uploadForm">
-    <!-- 1. 下拉選單（必填） -->
-  <div class="form-group">
-    <label for="personSelect">請選擇投稿對象 *</label>
-    <select id="personSelect" required>
-      <option value="">-- 請選擇人員 --</option>
-  
-      <!-- 👇 把這裡改成你實際的 20 個人名 -->
-      <option value="張三">張三</option>
-      <option value="李四">李四</option>
-      <option value="王五">王五</option>
-      <option value="陳六">陳六</option>
-      <!-- 一次複製擴充到 20 個人 ... -->
-  
-    </select>
+<div class="container">
+  <div class="header">
+    <div class="tag">ROBOTICS CLUB</div>
+    <h1>幹介照片投稿系統</h1>
+    <p class="subtitle">請選擇幹部名字並上傳該幹部的個人照或活動照</p>
   </div>
 
-    <!-- 2. 說明與事蹟（選填） -->
+  <form id="uploadForm">
+    <!-- 1. 下拉選單 (必填, 20 位幹部) -->
+    <div class="form-group">
+      <label for="personSelect">投稿幹部對象 <span class="req">*</span></label>
+      <select id="personSelect" required>
+        <option value="">-- 請選擇幹部 --</option>
+        <option value="社長">社長</option>
+        <option value="副社長">副社長</option>
+        <option value="教學">教學</option>
+        <option value="機構組長">機構組長</option>
+        <option value="電控組長">電控組長</option>
+        <option value="程式組長">程式組長</option>
+        <option value="公關">公關</option>
+        <option value="網管">網管</option>
+        <option value="總務">總務</option>
+        <option value="美宣">美宣</option>
+        <option value="活動">活動</option>
+        <option value="器材">器材</option>
+        <option value="幹部A">幹部 A</option>
+        <option value="幹部B">幹部 B</option>
+        <option value="幹部C">幹部 C</option>
+        <option value="幹部D">幹部 D</option>
+        <option value="幹部E">幹部 E</option>
+        <option value="幹部F">幹部 F</option>
+        <option value="幹部G">幹部 G</option>
+        <option value="幹部H">幹部 H</option>
+      </select>
+    </div>
+
+    <!-- 2. 說明與事蹟 (選填) -->
     <div class="form-group">
       <label for="storyText">說明與事蹟（選填）</label>
-      <textarea id="storyText" rows="3" placeholder="請輸入簡短說明..."></textarea>
+      <textarea id="storyText" placeholder="請填寫關於這些照片的說明、事蹟或備註..."></textarea>
     </div>
 
-    <!-- 3. 照片上傳（必填，多選） -->
+    <!-- 3. 照片檔案上傳 (必填，可多選) -->
     <div class="form-group">
-      <label for="photoInput">上傳照片（可一次選取數十張）*</label>
+      <label for="photoInput">上傳照片 <span class="req">*</span></label>
       <input type="file" id="photoInput" accept="image/*" multiple required>
+      <div class="file-hint">可一次選取多張照片（支援 JPG, PNG 等）</div>
     </div>
 
-    <button type="submit" id="submitBtn">開始上傳照片</button>
+    <button type="submit" class="submit-btn" id="submitBtn">開始上傳照片</button>
   </form>
 
-  <div id="statusContainer">
-    <div class="status-text" id="statusMsg">準備中...</div>
-    <progress id="progressBar" value="0" max="100"></progress>
+  <!-- 進度條 -->
+  <div id="progressContainer">
+    <div class="status-msg" id="statusMsg">準備中...</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
   </div>
 </div>
 
 <script>
-  // ⚠️ 請替換成你剛剛在 GAS 取得的部署網址
-  const GAS_URL = "你的_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+  // ⚠️ 請填入你在 Google Apps Script 取得的 Web App 部署網址
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbxzLGbJlFiXg1GQ7mPQc1hgbVjPdXnjIjbSZXapyXHfsB0-iVRTK2c4rV3xe5-sCbQ/exec";
 
   const form = document.getElementById('uploadForm');
   const submitBtn = document.getElementById('submitBtn');
-  const statusContainer = document.getElementById('statusContainer');
+  const progressContainer = document.getElementById('progressContainer');
   const statusMsg = document.getElementById('statusMsg');
-  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
 
-  // 工具函式：將 File 物件轉成 Base64 格式
+  // 工具：將 File 物件轉成 Base64
   const fileToBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -82,19 +298,24 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    if (!GAS_URL || GAS_URL.includes("你的_GOOGLE_APPS_SCRIPT")) {
+      alert("請記得在程式碼中填入你的 GAS 部署 URL！");
+      return;
+    }
+
     const person = document.getElementById('personSelect').value;
     const story = document.getElementById('storyText').value;
     const files = document.getElementById('photoInput').files;
 
-    if (files.length === 0) return alert("請至少選擇一張照片！");
+    if (files.length === 0) return alert("請至少選取一張照片！");
 
     submitBtn.disabled = true;
-    statusContainer.style.display = "block";
-    statusMsg.innerText = "正在初始化雲端資料夾...";
-    progressBar.value = 0;
+    progressContainer.style.display = "block";
+    statusMsg.innerText = "正在連線並建立雲端目錄...";
+    progressFill.style.width = "0%";
 
     try {
-      // 步驟 1：發送初始請求，創建 Drive 資料夾與試算表紀錄
+      // 階段 1：發送 POST，建立或尋找幹部名稱資料夾 + 寫入試算表
       const initRes = await fetch(GAS_URL, {
         method: "POST",
         body: JSON.stringify({
@@ -110,7 +331,7 @@
       const folderId = initRes.folderId;
       const totalFiles = files.length;
 
-      // 步驟 2：開始逐張傳送照片
+      // 階段 2：逐張上傳照片
       for (let i = 0; i < totalFiles; i++) {
         const file = files[i];
         statusMsg.innerText = `正在上傳第 (${i + 1}/${totalFiles}) 張：${file.name}`;
@@ -130,17 +351,18 @@
 
         if (uploadRes.status !== "success") throw new Error(uploadRes.message);
 
-        // 更新進度條
-        progressBar.value = Math.round(((i + 1) / totalFiles) * 100);
+        // 更新進度趴數
+        const percent = Math.round(((i + 1) / totalFiles) * 100);
+        progressFill.style.width = percent + "%";
       }
 
-      statusMsg.innerText = "🎉 所有照片上傳完成！感謝您的投稿。";
-      alert("上傳成功！照片與資料已存入雲端。");
+      statusMsg.innerText = "✓ 所有照片已成功傳送至雲端！";
+      alert("上傳成功！照片已存放至 Google Drive 幹部專屬資料夾。");
       form.reset();
 
     } catch (err) {
       console.error(err);
-      statusMsg.innerText = "❌ 上傳失敗，請稍後重試。";
+      statusMsg.innerText = "✕ 上傳失敗，請稍後重試。";
       alert("上傳過程中發生錯誤：" + err.message);
     } finally {
       submitBtn.disabled = false;
