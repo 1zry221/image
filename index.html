@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>機器人研究社 - 幹介照片徵稿</title>
   
   <!-- 導入 Google Fonts (DotGothic16 點陣像素字體 + Share Tech Mono 科技字體) -->
@@ -11,16 +11,15 @@
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
-    /* 全域像素風格設定 */
     :root {
-      --bg-color: #0d0e12;
-      --card-bg: rgba(18, 22, 30, 0.92);
+      --bg-color: #0b0c10;
+      --card-bg: #121620;
       --accent-color: #ff4d00;
       --accent-hover: #e04400;
       --text-main: #f0f2f5;
       --text-muted: #808c9e;
       --border-color: #262c3a;
-      --input-bg: #11141c;
+      --input-bg: #0a0d14;
       --success-color: #00e676;
       --error-color: #ff3d00;
       
@@ -34,87 +33,90 @@
       padding: 0; 
     }
 
-    /* 關閉字體抗鋸齒，突顯純粹點陣像素感 */
+    /* 像素字體與渲染設定 */
     body, input, select, textarea, button {
       font-family: var(--font-pixel);
       -webkit-font-smoothing: none;
       -moz-osx-font-smoothing: unset;
     }
 
-    body {
+    html, body {
+      width: 100%;
       background-color: var(--bg-color);
       color: var(--text-main);
+    }
+
+    body {
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 24px 16px;
+      align-items: flex-start; /* 改為靠頂，解決下方大量留白 */
+      padding: 40px 16px;
       position: relative;
-      overflow-x: hidden;
     }
 
-    /* 背景像素點陣幾何網格 */
+    /* 背景點陣線條 */
     body::before {
       content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: 
-        radial-gradient(circle at 50% 30%, rgba(255, 77, 0, 0.05) 0%, transparent 60%),
-        linear-gradient(rgba(255, 255, 255, 0.02) 2px, transparent 2px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 2px, transparent 2px);
-      background-size: 100% 100%, 20px 20px, 20px 20px;
+        radial-gradient(circle at 50% 20%, rgba(255, 77, 0, 0.04) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 24px 24px, 24px 24px;
       z-index: -1;
+      pointer-events: none;
     }
 
     .container {
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       background: var(--card-bg);
-      border: 2px solid var(--border-color);
-      border-top: 4px solid var(--accent-color);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--accent-color);
       border-radius: 4px;
-      padding: 36px 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      padding: 28px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
     }
 
     .header {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .tag {
       display: inline-block;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 2px;
       color: var(--accent-color);
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 22px;
       color: #ffffff;
       letter-spacing: 1px;
       line-height: 1.3;
     }
 
     p.subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-top: 8px;
-      line-height: 1.5;
+      margin-top: 6px;
+      line-height: 1.4;
     }
 
     .form-group {
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     label {
       display: block;
-      font-size: 15px;
-      margin-bottom: 8px;
+      font-size: 14px;
+      margin-bottom: 6px;
       color: #d1d7e0;
     }
 
@@ -125,11 +127,11 @@
     select, textarea, input[type="file"] {
       width: 100%;
       background-color: var(--input-bg);
-      border: 2px solid var(--border-color);
+      border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 10px 12px;
       border-radius: 2px;
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -145,45 +147,44 @@
 
     textarea {
       resize: vertical;
-      min-height: 85px;
+      min-height: 70px;
     }
 
-    /* 檔案選取按鈕像素風格 */
+    /* 檔案選擇器風格 */
     input[type="file"]::file-selector-button {
       font-family: var(--font-pixel);
-      background: #222938;
+      background: #202634;
       border: 1px solid var(--border-color);
       color: var(--text-main);
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: 2px;
       cursor: pointer;
       margin-right: 10px;
     }
 
     input[type="file"]::file-selector-button:hover {
-      background: #2d364a;
+      background: #2b3346;
     }
 
     .file-hint {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
-      margin-top: 6px;
+      margin-top: 5px;
     }
 
-    /* 按鈕樣式 */
     .submit-btn {
       width: 100%;
       background-color: var(--accent-color);
       color: #ffffff;
       border: none;
-      padding: 14px;
-      font-size: 18px;
+      padding: 12px;
+      font-size: 16px;
       border-radius: 2px;
       cursor: pointer;
       letter-spacing: 1px;
       transition: background-color 0.2s;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .submit-btn:hover {
@@ -191,19 +192,19 @@
     }
 
     .submit-btn:disabled {
-      background-color: #2b303c;
-      color: #5d6678;
+      background-color: #282d38;
+      color: #586070;
       cursor: not-allowed;
     }
 
-    /* 網頁內嵌通知訊息 (替代 Alert 小視窗) */
+    /* 內嵌訊息框 */
     .inline-msg {
       display: none;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 2px;
-      font-size: 14px;
-      margin-bottom: 20px;
-      line-height: 1.5;
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.4;
     }
 
     .inline-msg.success {
@@ -223,21 +224,21 @@
     /* 進度條容器 */
     #progressContainer {
       display: none;
-      margin-top: 22px;
-      padding-top: 18px;
+      margin-top: 18px;
+      padding-top: 14px;
       border-top: 1px dashed var(--border-color);
     }
 
     .status-msg {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-main);
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .progress-bar-bg {
       width: 100%;
-      height: 10px;
+      height: 8px;
       background-color: var(--input-bg);
       border-radius: 2px;
       overflow: hidden;
@@ -250,6 +251,44 @@
       background-color: var(--accent-color);
       transition: width 0.2s ease;
     }
+
+    /* 📱 手機專屬響應式調整 (RWD) */
+    @media (max-width: 600px) {
+      body {
+        padding: 16px 10px; /* 減小手機頁面邊距 */
+      }
+
+      .container {
+        padding: 20px 16px; /* 緊湊手機卡片內距 */
+      }
+
+      h1 {
+        font-size: 19px;
+      }
+
+      p.subtitle {
+        font-size: 12px;
+      }
+
+      label {
+        font-size: 13px;
+      }
+
+      select, textarea, input[type="file"] {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      input[type="file"]::file-selector-button {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+
+      .submit-btn {
+        padding: 11px;
+        font-size: 15px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -261,7 +300,6 @@
     <p class="subtitle">請選擇幹部對象並上傳個人照或活動照片</p>
   </div>
 
-  <!-- 行內訊息提示區（取代原先跳出的 alert 小視窗） -->
   <div id="inlineMsg" class="inline-msg"></div>
 
   <form id="uploadForm">
@@ -309,7 +347,6 @@
     <button type="submit" class="submit-btn" id="submitBtn">開始上傳照片</button>
   </form>
 
-  <!-- 上傳進度區塊 -->
   <div id="progressContainer">
     <div class="status-msg" id="statusMsg">準備上傳中...</div>
     <div class="progress-bar-bg">
@@ -329,7 +366,6 @@
   const progressFill = document.getElementById('progressFill');
   const inlineMsg = document.getElementById('inlineMsg');
 
-  // 工具：顯示頁面內的提示訊息（替代彈出視窗）
   function showMsg(type, text) {
     inlineMsg.className = `inline-msg ${type}`;
     inlineMsg.innerText = text;
@@ -340,7 +376,6 @@
     inlineMsg.innerText = "";
   }
 
-  // 工具：將 File 物件轉成 Base64
   const fileToBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -372,7 +407,6 @@
     progressFill.style.width = "0%";
 
     try {
-      // 階段 1：建立或尋找幹部資料夾 + 寫入試算表
       const initRes = await fetch(GAS_URL, {
         method: "POST",
         body: JSON.stringify({
@@ -388,7 +422,6 @@
       const folderId = initRes.folderId;
       const totalFiles = files.length;
 
-      // 階段 2：逐張上傳照片
       for (let i = 0; i < totalFiles; i++) {
         const file = files[i];
         statusMsg.innerText = `正在上傳 (${i + 1}/${totalFiles})：${file.name}`;
@@ -408,12 +441,10 @@
 
         if (uploadRes.status !== "success") throw new Error(uploadRes.message);
 
-        // 更新進度條
         const percent = Math.round(((i + 1) / totalFiles) * 100);
         progressFill.style.width = percent + "%";
       }
 
-      // 上傳成功處理 (直接在頁面上提示，完全不跳 alert 視窗)
       statusMsg.innerText = "✓ 所有檔案傳送完成！";
       showMsg('success', '🎉 上傳成功！照片已成功儲存至 Google Drive 幹部專屬資料夾。');
       form.reset();
