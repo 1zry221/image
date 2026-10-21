@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>照片募集系統</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f7; padding: 20px; }
+    .card { max-width: 550px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    h2 { margin-top: 0; color: #333; text-align: center; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
+    select, textarea, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+    button { width: 100%; background: #0066cc; color: #fff; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    #statusContainer { display: none; margin-top: 20px; }
+    progress { width: 100%; height: 20px; margin-top: 8px; }
+    .status-text { font-size: 14px; color: #555; text-align: center; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>照片投稿表單</h2>
+  <form id="uploadForm">
+    <!-- 1. 下拉選單（必填） -->
+    <div class="form-group">
+      <label for="personSelect">請選擇投稿對象 *</label>
+      <select id="personSelect" required>
+        <option value="">-- 請選擇人員 --</option>
+        <option value="成員01">成員 01</option>
+        <option value="成員02">成員 02</option>
+        <option value="成員03">成員 03</option>
+        <!-- 請自行複製擴充至 20 位成員 -->
+      </select>
+    </div>
+
+    <!-- 2. 說明與事蹟（選填） -->
+    <div class="form-group">
+      <label for="storyText">說明與事蹟（選填）</label>
+      <textarea id="storyText" rows="3" placeholder="請輸入簡短說明..."></textarea>
+    </div>
+
+    <!-- 3. 照片上傳（必填，多選） -->
+    <div class="form-group">
+      <label for="photoInput">上傳照片（可一次選取數十張）*</label>
+      <input type="file" id="photoInput" accept="image/*" multiple required>
+    </div>
+
+    <button type="submit" id="submitBtn">開始上傳照片</button>
+  </form>
+
+  <div id="statusContainer">
+    <div class="status-text" id="statusMsg">準備中...</div>
+    <progress id="progressBar" value="0" max="100"></progress>
+  </div>
+</div>
+
+<script>
+  // ⚠️ 請替換成你剛剛在 GAS 取得的部署網址
+  const GAS_URL = "你的_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+  const form = document.getElementById('uploadForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusContainer = document.getElementById('statusContainer');
+  const statusMsg = document.getElementById('statusMsg');
+  const progressBar = document.getElementById('progressBar');
+
+  // 工具函式：將 File 物件轉成 Base64 格式
+  const fileToBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const person = document.getElementById('personSelect').value;
+    const story = document.getElementById('storyText').value;
+    const files = document.getElementById('photoInput').files;
+
+    if (files.length === 0) return alert("請至少選擇一張照片！");
+
+    submitBtn.disabled = true;
+    statusContainer.style.display = "block";
+    statusMsg.innerText = "正在初始化雲端資料夾...";
+    progressBar.value = 0;
+
+    try {
+      // 步驟 1：發送初始請求，創建 Drive 資料夾與試算表紀錄
+      const initRes = await fetch(GAS_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "initSubmission",
+          person: person,
+          story: story,
+          photoCount: files.length
+        })
+      }).then(res => res.json());
+
+      if (initRes.status !== "success") throw new Error(initRes.message);
+
+      const folderId = initRes.folderId;
+      const totalFiles = files.length;
+
+      // 步驟 2：開始逐張傳送照片
+      for (let i = 0; i < totalFiles; i++) {
+        const file = files[i];
+        statusMsg.innerText = `正在上傳第 (${i + 1}/${totalFiles}) 張：${file.name}`;
+
+        const base64Data = await fileToBase64(file);
+
+        const uploadRes = await fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "uploadFile",
+            folderId: folderId,
+            fileName: file.name,
+            fileType: file.type,
+            fileData: base64Data
+          })
+        }).then(res => res.json());
+
+        if (uploadRes.status !== "success") throw new Error(uploadRes.message);
+
+        // 更新進度條
+        progressBar.value = Math.round(((i + 1) / totalFiles) * 100);
+      }
+
+      statusMsg.innerText = "🎉 所有照片上傳完成！感謝您的投稿。";
+      alert("上傳成功！照片與資料已存入雲端。");
+      form.reset();
+
+    } catch (err) {
+      console.error(err);
+      statusMsg.innerText = "❌ 上傳失敗，請稍後重試。";
+      alert("上傳過程中發生錯誤：" + err.message);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
