@@ -5,33 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>機器人研究社 - 幹介照片徵稿</title>
   
-  <!-- 導入 Google Fonts (Noto Sans TC + Chakra Petch + Share Tech Mono) -->
+  <!-- 導入 Google Fonts (DotGothic16 點陣像素字體 + Share Tech Mono 科技字體) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
-    /* 全域風格與字體設定 */
+    /* 全域像素風格設定 */
     :root {
-      --bg-color: #0b0c10;
-      --card-bg: rgba(19, 23, 31, 0.9);
+      --bg-color: #0d0e12;
+      --card-bg: rgba(18, 22, 30, 0.92);
       --accent-color: #ff4d00;
       --accent-hover: #e04400;
       --text-main: #f0f2f5;
-      --text-muted: #8892b0;
-      --border-color: #232936;
-      --input-bg: #121620;
+      --text-muted: #808c9e;
+      --border-color: #262c3a;
+      --input-bg: #11141c;
+      --success-color: #00e676;
+      --error-color: #ff3d00;
       
-      /* 字體變數 */
-      --font-main: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-tech: 'Chakra Petch', 'Noto Sans TC', sans-serif;
+      --font-pixel: 'DotGothic16', monospace, sans-serif;
       --font-mono: 'Share Tech Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    /* 關閉字體抗鋸齒，突顯純粹點陣像素感 */
+    body, input, select, textarea, button {
+      font-family: var(--font-pixel);
+      -webkit-font-smoothing: none;
+      -moz-osx-font-smoothing: unset;
+    }
 
     body {
-      font-family: var(--font-main);
       background-color: var(--bg-color);
       color: var(--text-main);
       min-height: 100vh;
@@ -43,75 +53,69 @@
       overflow-x: hidden;
     }
 
-    /* 背景質感微光與網格 */
+    /* 背景像素點陣幾何網格 */
     body::before {
       content: "";
       position: absolute;
       width: 200%;
       height: 200%;
       background: 
-        radial-gradient(circle at 50% 30%, rgba(255, 77, 0, 0.04) 0%, transparent 60%),
-        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-      background-size: 100% 100%, 36px 36px, 36px 36px;
+        radial-gradient(circle at 50% 30%, rgba(255, 77, 0, 0.05) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 2px, transparent 2px);
+      background-size: 100% 100%, 20px 20px, 20px 20px;
       z-index: -1;
-      transform: rotate(-3deg);
     }
 
     .container {
       width: 100%;
-      max-width: 540px;
+      max-width: 520px;
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-top: 3px solid var(--accent-color);
-      border-radius: 8px;
-      padding: 40px 32px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(12px);
+      border: 2px solid var(--border-color);
+      border-top: 4px solid var(--accent-color);
+      border-radius: 4px;
+      padding: 36px 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     }
 
     .header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .tag {
       display: inline-block;
-      font-family: var(--font-tech);
+      font-family: var(--font-mono);
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       color: var(--accent-color);
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     h1 {
-      font-family: var(--font-tech);
       font-size: 26px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
       color: #ffffff;
+      letter-spacing: 1px;
+      line-height: 1.3;
     }
 
     p.subtitle {
       font-size: 14px;
       color: var(--text-muted);
       margin-top: 8px;
-      font-weight: 400;
       line-height: 1.5;
     }
 
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     label {
       display: block;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
       margin-bottom: 8px;
-      color: #d8e0ea;
+      color: #d1d7e0;
     }
 
     label span.req {
@@ -120,47 +124,44 @@
 
     select, textarea, input[type="file"] {
       width: 100%;
-      font-family: var(--font-main);
       background-color: var(--input-bg);
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
       color: var(--text-main);
-      padding: 12px 14px;
-      border-radius: 6px;
+      padding: 10px 12px;
+      border-radius: 2px;
       font-size: 15px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s;
     }
 
     select:focus, textarea:focus, input[type="file"]:focus {
       border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.15);
     }
 
     option {
-      background-color: #161b26;
+      background-color: #161b24;
       color: var(--text-main);
     }
 
     textarea {
       resize: vertical;
-      min-height: 90px;
+      min-height: 85px;
     }
 
-    /* 上傳按鈕風格 */
+    /* 檔案選取按鈕像素風格 */
     input[type="file"]::file-selector-button {
-      font-family: var(--font-tech);
-      background: #202736;
+      font-family: var(--font-pixel);
+      background: #222938;
       border: 1px solid var(--border-color);
       color: var(--text-main);
-      padding: 6px 14px;
-      border-radius: 4px;
+      padding: 5px 12px;
+      border-radius: 2px;
       cursor: pointer;
-      margin-right: 12px;
-      transition: background 0.2s;
+      margin-right: 10px;
     }
 
     input[type="file"]::file-selector-button:hover {
-      background: #2b3447;
+      background: #2d364a;
     }
 
     .file-hint {
@@ -170,49 +171,65 @@
       margin-top: 6px;
     }
 
-    /* 提交按鈕 */
+    /* 按鈕樣式 */
     .submit-btn {
       width: 100%;
-      font-family: var(--font-tech);
       background-color: var(--accent-color);
       color: #ffffff;
       border: none;
-      padding: 15px;
-      font-size: 17px;
-      font-weight: 700;
-      border-radius: 6px;
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 2px;
       cursor: pointer;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      transition: background-color 0.2s, transform 0.1s;
-      margin-top: 8px;
+      letter-spacing: 1px;
+      transition: background-color 0.2s;
+      margin-top: 6px;
     }
 
     .submit-btn:hover {
       background-color: var(--accent-hover);
     }
 
-    .submit-btn:active {
-      transform: scale(0.99);
+    .submit-btn:disabled {
+      background-color: #2b303c;
+      color: #5d6678;
+      cursor: not-allowed;
     }
 
-    .submit-btn:disabled {
-      background-color: #2a303d;
-      color: #60687a;
-      cursor: not-allowed;
+    /* 網頁內嵌通知訊息 (替代 Alert 小視窗) */
+    .inline-msg {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .inline-msg.success {
+      display: block;
+      background-color: rgba(0, 230, 118, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .inline-msg.error {
+      display: block;
+      background-color: rgba(255, 61, 0, 0.1);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
     }
 
     /* 進度條容器 */
     #progressContainer {
       display: none;
-      margin-top: 25px;
-      padding-top: 20px;
+      margin-top: 22px;
+      padding-top: 18px;
       border-top: 1px dashed var(--border-color);
     }
 
     .status-msg {
-      font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-main);
       text-align: center;
       margin-bottom: 10px;
@@ -220,9 +237,9 @@
 
     .progress-bar-bg {
       width: 100%;
-      height: 8px;
+      height: 10px;
       background-color: var(--input-bg);
-      border-radius: 4px;
+      border-radius: 2px;
       overflow: hidden;
       border: 1px solid var(--border-color);
     }
@@ -243,6 +260,9 @@
     <h1>幹介照片投稿系統</h1>
     <p class="subtitle">請選擇幹部對象並上傳個人照或活動照片</p>
   </div>
+
+  <!-- 行內訊息提示區（取代原先跳出的 alert 小視窗） -->
+  <div id="inlineMsg" class="inline-msg"></div>
 
   <form id="uploadForm">
     <!-- 1. 下拉選單 (20 位幹部) -->
@@ -289,9 +309,9 @@
     <button type="submit" class="submit-btn" id="submitBtn">開始上傳照片</button>
   </form>
 
-  <!-- 進度條 -->
+  <!-- 上傳進度區塊 -->
   <div id="progressContainer">
-    <div class="status-msg" id="statusMsg">READY TO UPLOAD...</div>
+    <div class="status-msg" id="statusMsg">準備上傳中...</div>
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progressFill"></div>
     </div>
@@ -307,6 +327,18 @@
   const progressContainer = document.getElementById('progressContainer');
   const statusMsg = document.getElementById('statusMsg');
   const progressFill = document.getElementById('progressFill');
+  const inlineMsg = document.getElementById('inlineMsg');
+
+  // 工具：顯示頁面內的提示訊息（替代彈出視窗）
+  function showMsg(type, text) {
+    inlineMsg.className = `inline-msg ${type}`;
+    inlineMsg.innerText = text;
+  }
+
+  function hideMsg() {
+    inlineMsg.className = "inline-msg";
+    inlineMsg.innerText = "";
+  }
 
   // 工具：將 File 物件轉成 Base64
   const fileToBase64 = file => new Promise((resolve, reject) => {
@@ -318,9 +350,10 @@
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    hideMsg();
 
     if (!GAS_URL || GAS_URL.includes("你的_GOOGLE_APPS_SCRIPT")) {
-      alert("請記得在程式碼中填入你的 GAS 部署 URL！");
+      showMsg('error', '⚠️ 尚未設定 Google Apps Script 網址，請先修改程式碼！');
       return;
     }
 
@@ -328,11 +361,14 @@
     const story = document.getElementById('storyText').value;
     const files = document.getElementById('photoInput').files;
 
-    if (files.length === 0) return alert("請至少選取一張照片！");
+    if (files.length === 0) {
+      showMsg('error', '⚠️ 請至少選取一張照片！');
+      return;
+    }
 
     submitBtn.disabled = true;
     progressContainer.style.display = "block";
-    statusMsg.innerText = "[CONNECTING TO CLOUD STORAGE...]";
+    statusMsg.innerText = "正在連線雲端資料夾...";
     progressFill.style.width = "0%";
 
     try {
@@ -355,7 +391,7 @@
       // 階段 2：逐張上傳照片
       for (let i = 0; i < totalFiles; i++) {
         const file = files[i];
-        statusMsg.innerText = `UPLOADING (${i + 1}/${totalFiles}): ${file.name}`;
+        statusMsg.innerText = `正在上傳 (${i + 1}/${totalFiles})：${file.name}`;
 
         const base64Data = await fileToBase64(file);
 
@@ -372,19 +408,20 @@
 
         if (uploadRes.status !== "success") throw new Error(uploadRes.message);
 
-        // 更新進度
+        // 更新進度條
         const percent = Math.round(((i + 1) / totalFiles) * 100);
         progressFill.style.width = percent + "%";
       }
 
-      statusMsg.innerText = "[SUCCESS: ALL FILES UPLOADED]";
-      alert("上傳成功！照片已存放至 Google Drive 幹部專屬資料夾。");
+      // 上傳成功處理 (直接在頁面上提示，完全不跳 alert 視窗)
+      statusMsg.innerText = "✓ 所有檔案傳送完成！";
+      showMsg('success', '🎉 上傳成功！照片已成功儲存至 Google Drive 幹部專屬資料夾。');
       form.reset();
 
     } catch (err) {
       console.error(err);
-      statusMsg.innerText = "[ERROR: UPLOAD FAILED]";
-      alert("上傳過程中發生錯誤：" + err.message);
+      statusMsg.innerText = "✕ 上傳失敗";
+      showMsg('error', '❌ 上傳發生錯誤：' + err.message);
     } finally {
       submitBtn.disabled = false;
     }
