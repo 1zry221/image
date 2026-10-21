@@ -25,16 +25,20 @@
   <h2>照片投稿表單</h2>
   <form id="uploadForm">
     <!-- 1. 下拉選單（必填） -->
-    <div class="form-group">
-      <label for="personSelect">請選擇投稿對象 *</label>
-      <select id="personSelect" required>
-        <option value="">-- 請選擇人員 --</option>
-        <option value="成員01">成員 01</option>
-        <option value="成員02">成員 02</option>
-        <option value="成員03">成員 03</option>
-        <!-- 請自行複製擴充至 20 位成員 -->
-      </select>
-    </div>
+  <div class="form-group">
+    <label for="personSelect">請選擇投稿對象 *</label>
+    <select id="personSelect" required>
+      <option value="">-- 請選擇人員 --</option>
+  
+      <!-- 👇 把這裡改成你實際的 20 個人名 -->
+      <option value="張三">張三</option>
+      <option value="李四">李四</option>
+      <option value="王五">王五</option>
+      <option value="陳六">陳六</option>
+      <!-- 一次複製擴充到 20 個人 ... -->
+  
+    </select>
+  </div>
 
     <!-- 2. 說明與事蹟（選填） -->
     <div class="form-group">
